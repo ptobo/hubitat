@@ -44,15 +44,16 @@ private def initialize() {
 
 def deviceNotification(text){
 	try {
+        def textEncode = java.net.URLEncoder.encode(text, "UTF-8")
         def cmdParams = [
-		uri: "${settings.webhookURL}&payload=%7B%22text%22%3A%20%22${text}%22%7D",
+		uri: "${settings.webhookURL}&payload=%7B%22text%22%3A%20%22${textEncode}%22%7D",
 		headers: ["Content-Type": "application/x-www-form-urlencoded"],
         query: [text:"${text}"],
         body: "{ text: ${text}}"]
         
         httpPost(cmdParams) { resp ->
 			if(resp.status == 200) {
-                log.debug "updated ${resp.data}"
+                log.debug "Notification response ${resp.data}"
 				log.debug "Successful notification to Synology Chat"
             }
            	else { log.debug "Failed notification to Synology Chat" }
